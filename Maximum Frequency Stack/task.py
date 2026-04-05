@@ -1,34 +1,21 @@
 class FreqStack:
-
     def __init__(self):
-        self.fs1 = []
-        
+        self.freq = {}
+        self.group = {}
+        self.max_freq = 0
+
 
     def push(self, val: int) -> None:
-        self.fs1.append(val)
-
+        self.freq[val] = self.freq.get(val, 0) + 1
+        f = self.freq[val]
+        self.max_freq = max(self.max_freq, f)
+        if f not in self.group:
+            self.group[f] = []
+        self.group[f].append(val)
 
     def pop(self) -> int:
-        d = {}
-        for val in self.fs1:
-            if val not in d:
-                d[val] = 1
-            else:
-                d[val] += 1
-        
-        res = max(d, key=d.get)
-        self.fs1.reverse()
-        self.fs1.remove(res)
-        self.fs1.reverse()
+        res = self.group[self.max_freq].pop()
+        self.freq[res] -= 1
+        if not self.group[self.max_freq]:
+            self.max_freq -= 1
         return res
-        
-
-
-
-        
-
-
-# Your FreqStack object will be instantiated and called as such:
-# obj = FreqStack()
-# obj.push(val)
-# param_2 = obj.pop()
