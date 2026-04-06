@@ -1,33 +1,52 @@
-class MyStack:
+class Node:
+    def __init__(self, val):
+        self.val = val
+        self.next = None
 
+class Queue:
     def __init__(self):
-        self.q1 =[]
-        self.q2 = []
+        self.head = None
+        self.tail = None
+        self.size = 0
 
+    def enqueue(self, val):
+        node = Node(val)
+        if self.tail:
+            self.tail.next = node
+        self.tail = node
+        if not self.head:
+            self.head = node
+        self.size += 1
+
+    def dequeue(self):
+        val = self.head.val
+        self.head = self.head.next
+        if not self.head:
+            self.tail = None
+        self.size -= 1
+        return val
+    def peek(self):
+        return self.head.val
+
+    
+    def is_empty(self):
+        return self.head is None
+
+class MyStack:
+    def __init__(self):
+        self.q1 = Queue()
+        self.q2 = Queue()
     def push(self, x: int) -> None:
-        self.q2.append(x)
-        if self.q1:
-            while self.q1:
-                self.q2.append(self.q1.pop(0))
-        self.q1 = self.q2
-        self.q2 = []
+        self.q2.enqueue(x)
+        while not self.q1.is_empty():
+            self.q2.enqueue(self.q1.dequeue())
+        self.q1, self.q2 = self.q2, self.q1
     def pop(self) -> int:
-        return self.q1.pop(0)
-        
+        return self.q1.dequeue()
 
     def top(self) -> int:
-        if self.q1:
-            return self.q1[0]
-        
+        return self.q1.peek()
 
+    
     def empty(self) -> bool:
-        return not self.q1 and not self.q2
-        
-
-
-# Your MyStack object will be instantiated and called as such:
-# obj = MyStack()
-# obj.push(x)
-# param_2 = obj.pop()
-# param_3 = obj.top()
-# param_4 = obj.empty()
+        return self.q1.is_empty()
